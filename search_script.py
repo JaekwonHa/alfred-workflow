@@ -1,8 +1,9 @@
 #!/usr/bin/python3
-# -*- coding:utf-8 -*-
-
+import json
 import os
 import sys
+from dataclasses import dataclass, field
+from typing import List
 
 IDEA_PATH = "/usr/local/bin/idea"
 PROJECT_PATH = [
@@ -12,6 +13,33 @@ PROJECT_PATH = [
     "/Users/jaekwon/workspace/TDD-cleancode",
     "/Users/jaekwon/workspace/DDD-serenade"
 ]
+
+
+@dataclass()
+class Icon:
+    path: str
+
+
+@dataclass
+class Item:
+    uid: str
+    title: str
+    subtitle: str
+    arg: str
+    icon: Icon
+    autocomplete: str = ""
+    type: str = "default"
+
+
+@dataclass
+class Items:
+    items: List[Item] = field(default_factory=list)
+
+    def add(self, item: Item):
+        self.items.append(item)
+
+    def toJson(self) -> str:
+        return json.dumps(self, default=lambda o: o.__dict__)
 
 
 def search(q, dirname):
@@ -48,28 +76,22 @@ def get_project_name(path):
 
 
 def main(argv):
-    # q = u'{query}'
-    # q = unicode(argv[1])
     q = argv[1]
     projects = []
-
-    # print(u'search query is %s' % q)
 
     for path in PROJECT_PATH:
         projects.extend(search(q, path))
 
     projects = sorted(projects, key=(lambda x: x["project_name"]))
 
-    print("<items>")
+    items = Items()
     for project in projects:
-        print(
-            u'<item uid="%s" arg="%s"><title>%s</title><subtitle>Open Project '
-            u'&quot;%s&quot;</subtitle><icon>ij_icon.png</icon></item>' % (
-                project["index"], project["path"], project["project_name"], project["dirname"]))
-    print("</items>")
+        item = Item(uid=project["index"], arg=project["path"], title=project["project_name"],
+                    subtitle=f'Open Project "{project["dirname"]}"', icon=Icon(path="ij_icon.png"))
+        items.add(item)
+
+    print(items.toJson())
 
 
 if __name__ == "__main__":
-    # reload(sys)
-    # sys.setdefaultencoding("utf-8")
     main(sys.argv)
