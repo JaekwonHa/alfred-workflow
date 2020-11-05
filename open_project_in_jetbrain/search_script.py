@@ -4,15 +4,10 @@ import os
 import sys
 from dataclasses import dataclass, field
 from typing import List
+import argparse
 
-IDEA_PATH = "/usr/local/bin/idea"
-PROJECT_PATH = [
-    "/Users/jaekwon/workspace/skt/project",
-    "/Users/jaekwon/workspace/skt/",
-    "/Users/jaekwon/workspace/project",
-    "/Users/jaekwon/workspace/TDD-cleancode",
-    "/Users/jaekwon/workspace/DDD-serenade"
-]
+
+IDEA_PATH = ""
 
 
 @dataclass()
@@ -76,10 +71,31 @@ def get_project_name(path):
 
 
 def main(argv):
-    q = argv[1]
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--idea",
+        type=str,
+        default="/usr/local/bin/idea"
+    )
+    parser.add_argument(
+        "--query",
+        type=str,
+        default=""
+    )
+    parser.add_argument(
+        "--project_paths",
+        nargs="*",
+        type=str,
+        default=[]
+    )
+
+    args = parser.parse_args()
+
+    IDEA_PATH = args.idea
+    q = args.query
     projects = []
 
-    for path in PROJECT_PATH:
+    for path in args.project_paths:
         projects.extend(search(q, path))
 
     projects = sorted(projects, key=(lambda x: x["project_name"]))
