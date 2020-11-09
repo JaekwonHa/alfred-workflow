@@ -14,6 +14,7 @@ script_path=$user_home/workspace/project/alfred-workflow/open_project_in_jetbrai
 idea=/usr/local/bin/idea
 query=$1
 project_paths="$user_home/project1 $user_home/project2"
+icon_path="ij_icon.png"
 
 python3 $script_path --idea $idea --query $query --project_paths $project_paths --icon_path $icon_path
 ```
