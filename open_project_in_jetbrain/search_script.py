@@ -88,12 +88,18 @@ def main(argv):
         type=str,
         default=[]
     )
+    parser.add_argument(
+        "--icon_path",
+        type=str,
+        default="ij_icon.png"
+    )
 
     args = parser.parse_args()
 
     IDEA_PATH = args.idea
     q = args.query
     projects = []
+    icon_path = args.icon_path
 
     for path in args.project_paths:
         projects.extend(search(q, path))
@@ -103,7 +109,7 @@ def main(argv):
     items = Items()
     for project in projects:
         item = Item(uid=project["index"], arg=project["path"], title=project["project_name"],
-                    subtitle=f'Open Project "{project["dirname"]}"', icon=Icon(path="ij_icon.png"))
+                    subtitle=f'Open Project "{project["dirname"]}"', icon=Icon(path=icon_path))
         items.add(item)
 
     print(items.toJson())
