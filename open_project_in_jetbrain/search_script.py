@@ -37,13 +37,13 @@ class Items:
         return json.dumps(self, default=lambda o: o.__dict__)
 
 
-def search(q, dirname):
+def search(q: str, dirname):
     ps = []
     filenames = os.listdir(dirname)
     for i, filename in enumerate(filenames):
         full_path = os.path.join(dirname, filename)
         if os.path.isdir(full_path) and check_jetbrain_project(full_path):
-            if q == "" or filename.find(q) >= 0:
+            if q == "" or filename.lower().find(q.lower()) >= 0:
                 ps.append({
                     "index": i,
                     "project_name": get_project_name(full_path),
