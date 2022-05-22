@@ -1,0 +1,22 @@
+#!/usr/bin/expect
+
+set timeout 10
+
+set GATEWAY [lindex $argv 0]
+set GATEWAY_PW [lindex $argv 1]
+set KERBEROS_PW [lindex $argv 2]
+set HOST_USER [lindex $argv 3]
+set HOST [lindex $argv 4]
+set YUBIKEY [lindex $argv 5]
+
+spawn /usr/bin/ssh $GATEWAY
+
+expect {
+
+}
+
+send "rlogin -l $HOST_USER $HOST\r"
+
+interact
+
+expect eof
